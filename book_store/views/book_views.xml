@@ -1,40 +1,62 @@
 <odoo>
-    <record id="view_form_book" model="ir.ui.view">
-        <field name="name">book_store.book.form</field>
-        <field name="model">book_store.book</field>
-        <field name="arch" type="xml">
-            <form string="Book">
-                <sheet>
-                    <group>
-                        <field name="title"/>
-                        <field name="author"/>
-                        <field name="price"/>
-                        <field name="published_date"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+	
+	<record id="view_form_book" model="ir.ui.view">
+		<field name="name">book_store.book.form</field>
+		<field name="model">book_store.book</field>
+		<field name="arch" type="xml">
+			<form string="Book">
+				<sheet>
+					<group>
+						<field name="title"/>
+						<field name="author"/>
+						<field name="price"/>
+						<field name="published_date"/>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record id="view_list_book" model="ir.ui.view">
+		<field name="name">book_store.book.tree</field>
+		<field name="model">book_store.book</field>
+		<field name="arch" type="xml">
+			<list string="Books" create="true" edit="true" delete="true">
+				<field name="title"/>
+				<field name="author"/>
+				<field name="price"/>
+				<field name="published_date"/>
+			</list>
+		</field>
+	</record>
+	
+	<!-- Book List/Tree Action -->
+	<record id="action_book_store" model="ir.actions.act_window">
+		<field name="name">Books</field>
+		<field name="res_model">book_store.book</field>
+		<field name="view_mode">list,form</field>
+		<field name="context">{}</field>
+	</record>
+	
+	<!-- Server Action: Add Book from API -->
+	<record id="action_fetch_book_api" model="ir.actions.server">
+		<field name="name">Add Book from API</field>
+		<field name="model_id" ref="model_book_store_book"/>
+		<field name="binding_model_id" ref="model_book_store_book"/>
+		<field name="state">code</field>
+		<field name="code">
+			action = env['book_store.book'].fetch_book_from_api()
+		</field>
+	</record>
+	
+	<!-- Main Menu -->
+	<menuitem id="menu_book_store_root" name="Book Store" sequence="10"/>
+	
+	<!-- Submenu: Book List View -->
+	<menuitem id="menu_books" name="Books" parent="menu_book_store_root" action="action_book_store" sequence="20"/>
+	
+	<!-- Submenu: Add Book from API -->
+	<menuitem id="menu_add_book_api" name="Add Book from API" parent="menu_book_store_root" action="action_fetch_book_api"
+	          sequence="30"/>
 
-    <record id="view_list_book" model="ir.ui.view">
-        <field name="name">book_store.book.tree</field>
-        <field name="model">book_store.book</field>
-        <field name="arch" type="xml">
-            <list string="Books">
-                <field name="title"/>
-                <field name="author"/>
-                <field name="price"/>
-                <field name="published_date"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="action_book_store" model="ir.actions.act_window">
-        <field name="name">Books</field>
-        <field name="res_model">book_store.book</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <menuitem id="menu_book_store_root" name="Book Store"/>
-    <menuitem id="menu_books" name="Books" parent="menu_book_store_root" action="action_book_store"/>
 </odoo>
